@@ -51,6 +51,7 @@ public class UserController {
                 return new Response("A person with that id already exists", Status.BAD_REQUEST);
             }
             return new Response("Person created successfully", Status.CREATED);
+            
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

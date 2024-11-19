@@ -48,14 +48,5 @@ public class UserStorage {
         }
         return null;
     }
-    
-    public boolean delUser(int id) {
-        for (User user : this.persons) {
-            if (user.getId() == id) {
-                this.persons.remove(user);
-                return true;
-            }
-        }
-        return false;
-    }
+   
 }
