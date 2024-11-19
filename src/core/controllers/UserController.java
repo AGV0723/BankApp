@@ -56,6 +56,5 @@ public class UserController {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
-    
-    
+       
 }
