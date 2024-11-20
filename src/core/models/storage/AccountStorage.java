@@ -31,7 +31,7 @@ public class AccountStorage {
         return instance;
     }
     
-    public boolean addUser(Account accounts) {
+    public boolean addAccount(Account accounts) {
         for (Account p : this.accounts) {
             if (p.getId() == accounts.getId()) {
                 return false;
@@ -41,7 +41,7 @@ public class AccountStorage {
         return true;
     }
     
-    public Account getUser(int id) {
+    public Account getAccount(int id) {
         for (Account account : this.accounts) {
             if (Integer.parseInt(account.getId()) == id) {
                 return account;
