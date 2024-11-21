@@ -4,32 +4,34 @@
  */
 package core.models;
 
+import java.util.Random;
+
 /**
  *
  * @author edangulo
  */
 public class Account {
-    
+
     private String id;
     private User owner;
     private double balance;
 
-    public Account(String id, User owner) {
-        this.id = id;
+    public Account(User owner) {
+        this.id = this.createID();
         this.owner = owner;
         this.balance = 0;
-        
+
         this.owner.addAccount(this);
     }
-    
-    public Account(String id, User owner, double balance) {
-        this.id = id;
+
+    public Account(User owner, double balance) {
+        this.id = this.createID();
         this.owner = owner;
         this.balance = balance;
-        
+
         this.owner.addAccount(this);
     }
-    
+
     public String getId() {
         return id;
     }
@@ -41,11 +43,11 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-    
+
     public void deposit(double amount) {
         this.balance += amount;
     }
-    
+
     public boolean withdraw(double amount) {
         if (amount > this.balance) {
             return false;
@@ -53,5 +55,15 @@ public class Account {
         this.balance -= amount;
         return true;
     }
-    
+
+    private String createID() {
+        Random random = new Random();
+        int first = random.nextInt(1000);
+        int second = random.nextInt(1000000);
+        int third = random.nextInt(100);
+
+        String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+        
+        return accountId;
+    }
 }

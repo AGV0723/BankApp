@@ -6,6 +6,7 @@ package core.views;
 
 
 
+import core.controllers.AccountController;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.models.Account;
@@ -14,7 +15,6 @@ import core.models.transactions.Transaction;
 import core.models.transactions.type.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -544,7 +544,7 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-       String id = IDTextField.getText();
+        String id = IDTextField.getText();
         String firstname = firstnameTextField.getText();
         String lastname = lastnameTextField.getText();
         String age = ageTextField.getText();
@@ -567,32 +567,21 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            int userId = Integer.parseInt(jTextField5.getText());
-            double initialBalance = Double.parseDouble(jTextField6.getText());
+        String userId =jTextField5.getText();
+        String initialBalance = jTextField6.getText();
+        
+        Response response = AccountController.CreateAccount(userId, initialBalance);
+        
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
             
-            User selectedUser = null;
-            for (User user : this.users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
-            
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-                
-                jTextField5.setText("");
-                jTextField6.setText("");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            jTextField5.setText("");
+            jTextField6.setText("");
         }
     }//GEN-LAST:event_CreateAccountButtonActionPerformed
 
