@@ -34,21 +34,21 @@ public class AccountController {
             try {
                 balanceInt = Double.parseDouble(Balance);
                 if (balanceInt < 0) {
-                    return new Response("Age must be positive", Status.BAD_REQUEST);
+                    return new Response("balance must be positive", Status.BAD_REQUEST);
                 }
             } catch (NumberFormatException ex) {
-                return new Response("Age must be numeric", Status.BAD_REQUEST);
+                return new Response("balance must be numeric", Status.BAD_REQUEST);
             }
          
             AccountStorage storage = AccountStorage.getInstance(); 
-            
             UserStorage userStorage = UserStorage.getInstance();
-            User  user = userStorage.getUser (idInt);
             
-            if (!storage.addAccount(new Account(String.valueOf(idInt), user, balanceInt))) {
+            User user = userStorage.getUser (idInt);
+            
+            if (!storage.addAccount(new Account(user, balanceInt))) {
                 return new Response("A person with that id already exists", Status.BAD_REQUEST);
             }
-            return new Response("Person created successfully", Status.CREATED);
+            return new Response("Account created successfully", Status.CREATED);
             
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

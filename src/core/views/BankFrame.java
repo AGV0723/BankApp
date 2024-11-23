@@ -6,6 +6,9 @@ package core.views;
 
 
 
+import core.controllers.AccountController;
+import core.controllers.ListAccountController;
+import core.controllers.ListUserController;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.models.Account;
@@ -14,7 +17,6 @@ import core.models.transactions.Transaction;
 import core.models.transactions.type.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -58,7 +60,7 @@ public class BankFrame extends javax.swing.JFrame {
         firstnameTextField = new javax.swing.JTextField();
         lastnameTextField = new javax.swing.JTextField();
         ageTextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        RegisterUserButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -122,11 +124,11 @@ public class BankFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jButton1.setText("Register");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        RegisterUserButton.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        RegisterUserButton.setText("Register");
+        RegisterUserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                RegisterUserButtonActionPerformed(evt);
             }
         });
 
@@ -156,7 +158,7 @@ public class BankFrame extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(259, 259, 259)
-                .addComponent(jButton1)
+                .addComponent(RegisterUserButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -181,7 +183,7 @@ public class BankFrame extends javax.swing.JFrame {
                     .addComponent(ageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(RegisterUserButton)
                 .addContainerGap(83, Short.MAX_VALUE))
         );
 
@@ -542,9 +544,9 @@ public class BankFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void RegisterUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterUserButtonActionPerformed
         // TODO add your handling code here:
-       String id = IDTextField.getText();
+        String id = IDTextField.getText();
         String firstname = firstnameTextField.getText();
         String lastname = lastnameTextField.getText();
         String age = ageTextField.getText();
@@ -563,36 +565,25 @@ public class BankFrame extends javax.swing.JFrame {
             lastnameTextField.setText("");
             ageTextField.setText("");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_RegisterUserButtonActionPerformed
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            int userId = Integer.parseInt(jTextField5.getText());
-            double initialBalance = Double.parseDouble(jTextField6.getText());
+         String userId =jTextField5.getText();
+        String initialBalance = jTextField6.getText();
+        
+        Response response = AccountController.CreateAccount(userId, initialBalance);
+        
+        
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
             
-            User selectedUser = null;
-            for (User user : this.users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
-            
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
-                
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
-                
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-                
-                jTextField5.setText("");
-                jTextField6.setText("");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            jTextField5.setText("");
+            jTextField6.setText("");
         }
     }//GEN-LAST:event_CreateAccountButtonActionPerformed
 
@@ -683,26 +674,35 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+      
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
+        Response response = ListUserController.showUserList(model);
         
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
-        
-        for (User user : this.users) {
-            model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
+        Response response = ListAccountController.showAccountList(model);
         
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
-        
-        for (Account account : this.accounts) {
-            model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
         }
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -735,9 +735,9 @@ public class BankFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CreateAccountButton;
     private javax.swing.JTextField IDTextField;
+    private javax.swing.JButton RegisterUserButton;
     private javax.swing.JTextField ageTextField;
     private javax.swing.JTextField firstnameTextField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
