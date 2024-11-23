@@ -9,6 +9,15 @@ package core.views;
 import core.controllers.AccountController;
 import core.controllers.ListAccountController;
 import core.controllers.ListUserController;
+import core.controllers.utils.Response;
+import core.models.Account;
+import core.models.transactions.type.TransactionType;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import core.controllers.ListAccountController;
+import core.controllers.ListUserController;
 import core.controllers.UserController;
 import core.controllers.utils.Response;
 import core.models.Account;
@@ -569,7 +578,9 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
         // TODO add your handling code here:
+
          String userId =jTextField5.getText();
+
         String initialBalance = jTextField6.getText();
         
         Response response = AccountController.CreateAccount(userId, initialBalance);

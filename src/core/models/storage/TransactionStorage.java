@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models.storage;
-
 import core.models.Account;
 import core.models.User;
 import core.models.transactions.Transaction;

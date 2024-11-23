@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models.storage;
-
 import core.models.User;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
