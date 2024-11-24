@@ -8,13 +8,11 @@ import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.User;
 import core.models.storage.UserStorage;
-
 /**
  *
  * @author Usuario
  */
 public class UserController {
-    
     public static Response registerUser(String id, String firstname, String lastname, String age) {
         try {
             int idInt, ageInt;

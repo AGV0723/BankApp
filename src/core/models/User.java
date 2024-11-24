@@ -4,13 +4,11 @@
  */
 package core.models;
 import java.util.ArrayList;
-
 /**
  *
  * @author edangulo
  */
-public class User {
-    
+public class User {    
     private int id;
     private String firstname;
     private String lastname;

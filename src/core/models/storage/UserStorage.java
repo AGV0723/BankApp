@@ -6,7 +6,6 @@ package core.models.storage;
 import core.models.User;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author Usuario

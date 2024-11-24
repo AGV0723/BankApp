@@ -6,13 +6,11 @@ package core.models.storage;
 import core.models.Account;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author Usuario
  */
-public class AccountStorage {
-    
+public class AccountStorage { 
     // Instancia Singleton
     private static AccountStorage instance;
     
@@ -32,7 +30,7 @@ public class AccountStorage {
     
     public boolean addAccount(Account accounts) {
         for (Account p : this.accounts) {
-            if (p.getId() == accounts.getId()) {
+            if (p.getId().equals(accounts.getId())) {
                 return false;
             }
         }
@@ -64,6 +62,5 @@ public class AccountStorage {
         for (Account account1 : this.accounts) {
             model.addRow(new Object[]{account1.getId(), account1.getOwnerId(), account1.getBalance()});
         }
-        
     }
 }

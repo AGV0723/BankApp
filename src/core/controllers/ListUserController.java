@@ -7,7 +7,6 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.storage.UserStorage;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author Usuario

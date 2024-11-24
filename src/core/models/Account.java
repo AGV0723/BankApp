@@ -3,15 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models;
-
 import java.util.Random;
-
 /**
  *
  * @author edangulo
  */
 public class Account {
-
   
     private String id;
     private User owner;
@@ -48,6 +45,11 @@ public class Account {
         return balance;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+    
+
     public void deposit(double amount) {
         this.balance += amount;
     }
@@ -58,6 +60,10 @@ public class Account {
         }
         this.balance -= amount;
         return true;
+    }
+    
+    public int getOwnerID (){
+        return owner.getId();
     }
 
     @Override

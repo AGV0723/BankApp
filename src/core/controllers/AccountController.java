@@ -9,13 +9,11 @@ import core.models.Account;
 import core.models.User;
 import core.models.storage.AccountStorage;
 import core.models.storage.UserStorage;
-
 /**
  *
  * @author Usuario
  */
 public class AccountController {
-
     public static Response CreateAccount(String id, String Balance) {
         try {
             int idInt;

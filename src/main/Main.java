@@ -3,11 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package main;
-
 import core.models.User;
 import core.models.storage.UserStorage;
 import core.views.BankFrame;
-
 /**
  *
  * @author Usuario

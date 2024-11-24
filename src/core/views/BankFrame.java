@@ -3,15 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package core.views;
-
-
-
 import core.controllers.AccountController;
 import core.controllers.ListAccountController;
 import core.controllers.ListUserController;
 import core.controllers.utils.Response;
 import core.models.Account;
-import core.models.transactions.type.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
@@ -19,11 +15,13 @@ import javax.swing.table.DefaultTableModel;
 import core.controllers.ListAccountController;
 import core.controllers.ListUserController;
 import core.controllers.UserController;
+import core.controllers.transactions.DepositController;
+import core.controllers.transactions.TransferController;
+import core.controllers.transactions.WitdrawController;
 import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.User;
 import core.models.transactions.Transaction;
-import core.models.transactions.type.TransactionType;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
@@ -34,11 +32,11 @@ import javax.swing.table.DefaultTableModel;
  * @author edangulo
  */
 public class BankFrame extends javax.swing.JFrame {
-    
+
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private ArrayList<User> users;
-    
+
     /**
      * Creates new form BankFrame
      */
@@ -83,9 +81,9 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jTextField9 = new javax.swing.JTextField();
+        jTextFieldSourceAccount = new javax.swing.JTextField();
+        jTextFieldDestinationAccount = new javax.swing.JTextField();
+        jTextFieldAmount = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton3 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
@@ -274,7 +272,7 @@ public class BankFrame extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel13.setText("Amount");
 
-        jTextField8.setToolTipText("");
+        jTextFieldDestinationAccount.setToolTipText("");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deposit", "Withdraw", "Transfer" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -306,10 +304,10 @@ public class BankFrame extends javax.swing.JFrame {
                             .addComponent(jLabel11))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldDestinationAccount, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldSourceAccount, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jComboBox1, 0, 485, Short.MAX_VALUE)
-                            .addComponent(jTextField9, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(jTextFieldAmount, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(227, 227, 227)
                         .addComponent(jLabel9)))
@@ -330,15 +328,15 @@ public class BankFrame extends javax.swing.JFrame {
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldSourceAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldDestinationAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
@@ -559,16 +557,16 @@ public class BankFrame extends javax.swing.JFrame {
         String firstname = firstnameTextField.getText();
         String lastname = lastnameTextField.getText();
         String age = ageTextField.getText();
-        
+
         Response response = UserController.registerUser(id, firstname, lastname, age);
-        
+
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-            
+
             IDTextField.setText("");
             firstnameTextField.setText("");
             lastnameTextField.setText("");
@@ -578,21 +576,19 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
         // TODO add your handling code here:
-
-         String userId =jTextField5.getText();
-
+        
+        String userId = jTextField5.getText();
         String initialBalance = jTextField6.getText();
-        
+
         Response response = AccountController.CreateAccount(userId, initialBalance);
-        
-        
+
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
-            
+
             jTextField5.setText("");
             jTextField6.setText("");
         }
@@ -604,77 +600,66 @@ public class BankFrame extends javax.swing.JFrame {
             String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
             switch (type) {
                 case "Deposit": {
-                    String destinationAccountId = jTextField8.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
-                    
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (destinationAccount != null) {
-                        destinationAccount.deposit(amount);
-                        
-                        this.transactions.add(new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
+                    String destinationAccountId = jTextFieldDestinationAccount.getText();
+                    String amount = jTextFieldAmount.getText();
+
+                    Response response = DepositController.makeTrasaction(destinationAccountId, amount);
+
+                    if (response.getStatus() >= 500) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                    } else if (response.getStatus() >= 400) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
+                        jTextFieldDestinationAccount.setText("");
+                        jTextFieldAmount.setText("");
                     }
                     break;
                 }
                 case "Withdraw": {
-                    String sourceAccountId = jTextField7.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
-                    
-                    Account sourceAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && sourceAccount.withdraw(amount)) {
-                        this.transactions.add(new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
+                    String sourceAccountId = jTextFieldSourceAccount.getText();
+                    String amount = jTextFieldAmount.getText();
+
+                    Response response = WitdrawController.makeTrasaction(sourceAccountId, amount);
+
+                    if (response.getStatus() >= 500) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                    } else if (response.getStatus() >= 400) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
+                        jTextFieldDestinationAccount.setText("");
+                        jTextFieldAmount.setText("");
                     }
                     break;
                 }
                 case "Transfer": {
-                    String sourceAccountId = jTextField7.getText();
-                    String destinationAccountId = jTextField8.getText();
-                    double amount = Double.parseDouble(jTextField9.getText());
-                    
-                    Account sourceAccount = null;
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
+                    String sourceAccountId = jTextFieldSourceAccount.getText();
+                    String destinationAccountId = jTextFieldDestinationAccount.getText();
+                    String amount = jTextFieldAmount.getText();
+
+                    Response response = TransferController.makeTrasaction(destinationAccountId, sourceAccountId, amount);
+
+                    if (response.getStatus() >= 500) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+                    } else if (response.getStatus() >= 400) {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
+                        jTextFieldSourceAccount.setText("");
+                        jTextFieldDestinationAccount.setText("");
+                        jTextFieldAmount.setText("");
                     }
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
-                        destinationAccount.deposit(amount);
-                        
-                        this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
-                        
-                        jTextField7.setText("");
-                        jTextField8.setText("");
-                        jTextField9.setText("");
-                    }
+
                     break;
                 }
                 default: {
-                    jTextField7.setText("");
-                    jTextField8.setText("");
-                    jTextField9.setText("");
+                    jTextFieldSourceAccount.setText("");
+                    jTextFieldDestinationAccount.setText("");
+                    jTextFieldAmount.setText("");
                     break;
                 }
             }
@@ -685,18 +670,19 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-      
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
+
         Response response = ListUserController.showUserList(model);
-        
+
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -704,14 +690,16 @@ public class BankFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
+
         Response response = ListAccountController.showAccountList(model);
-        
+
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
         }
 
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -720,12 +708,12 @@ public class BankFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
-        
+
         ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
         Collections.reverse(transactionsCopy);
-        
+
         for (Transaction transaction : transactionsCopy) {
-            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount()!= null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
+            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
     }//GEN-LAST:event_jButton6ActionPerformed
 
@@ -741,7 +729,6 @@ public class BankFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
- 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CreateAccountButton;
@@ -785,9 +772,9 @@ public class BankFrame extends javax.swing.JFrame {
     private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jTextFieldAmount;
+    private javax.swing.JTextField jTextFieldDestinationAccount;
+    private javax.swing.JTextField jTextFieldSourceAccount;
     private javax.swing.JTextField lastnameTextField;
     // End of variables declaration//GEN-END:variables
 }
