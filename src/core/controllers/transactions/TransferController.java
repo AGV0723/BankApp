@@ -11,7 +11,6 @@ import core.models.storage.AccountStorage;
 import core.models.storage.TransactionStorage;
 import core.models.transactions.Transaction;
 import core.models.transactions.type.TransactionType;
-
 /**
  *
  * @author adrianonzalezrubiovilla

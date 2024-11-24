@@ -3,14 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.controllers;
-
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Account;
 import core.models.User;
 import core.models.storage.AccountStorage;
 import core.models.storage.UserStorage;
-
 /**
  *
  * @author Usuario

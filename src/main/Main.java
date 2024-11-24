@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package main;
-
+import core.models.User;
+import core.models.storage.UserStorage;
 import core.views.BankFrame;
 
 /**
@@ -16,6 +17,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -46,5 +48,7 @@ public class Main {
             }
         });
     }
+    
+    
     
 }

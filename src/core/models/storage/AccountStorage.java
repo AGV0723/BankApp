@@ -3,11 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models.storage;
-
 import core.models.Account;
-import core.models.User;
 import java.util.ArrayList;
-
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Usuario
@@ -48,5 +46,23 @@ public class AccountStorage {
             }
         }
         return null;
+    }
+    
+     public void printAccounts(DefaultTableModel  model) {
+        if (this.accounts.isEmpty()) {
+            System.out.println("No hay usuarios en la lista.");
+            return;
+        }
+
+        System.out.println("Lista de Usuarios:");
+        for (Account  account : this.accounts) {
+            System.out.println("ID: " + account.getId() + ", Balance: " + account.getBalance());
+        }    
+            this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        
+        for (Account account1 : this.accounts) {
+            model.addRow(new Object[]{account1.getId(), account1.getOwnerID(), account1.getBalance()});
+        }
+        
     }
 }

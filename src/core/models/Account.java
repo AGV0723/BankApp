@@ -3,15 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models;
-
 import java.util.Random;
-
 /**
  *
  * @author edangulo
  */
 public class Account {
 
+  
     private String id;
     private User owner;
     private double balance;
@@ -20,7 +19,6 @@ public class Account {
         this.id = this.createID();
         this.owner = owner;
         this.balance = 0;
-
         this.owner.addAccount(this);
     }
 
@@ -60,6 +58,10 @@ public class Account {
         this.balance -= amount;
         return true;
     }
+    
+    public int getOwnerID (){
+        return owner.getId();
+    }
 
     private String createID() {
         Random random = new Random();
@@ -69,6 +71,8 @@ public class Account {
 
         String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
         
-        return accountId;
+
+        return accountId;    
+
     }
 }
