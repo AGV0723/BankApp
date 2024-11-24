@@ -62,7 +62,7 @@ public class AccountStorage {
             this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
         
         for (Account account1 : this.accounts) {
-            model.addRow(new Object[]{account1.getId(), account1.getId() + " " + account1.getBalance()});
+            model.addRow(new Object[]{account1.getId(), account1.getOwnerId(), account1.getBalance()});
         }
         
     }

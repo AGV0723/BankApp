@@ -39,6 +39,10 @@ public class Account {
     public User getOwner() {
         return owner;
     }
+    
+    public int getOwnerId() {
+        return owner.getId();
+    }
 
     public double getBalance() {
         return balance;
@@ -54,6 +58,11 @@ public class Account {
         }
         this.balance -= amount;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + this.owner;
     }
 
     private String createID() {
