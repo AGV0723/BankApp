@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package core.views;
+
 import core.controllers.AccountController;
 import core.controllers.ListAccountController;
 import core.controllers.ListUserController;
 import core.controllers.UserController;
+import core.controllers.transactions.DepositController;
 import core.controllers.transactions.Transactions;
 import core.controllers.transactions.TransferController;
 import core.controllers.transactions.WitdrawController;
@@ -29,7 +31,17 @@ public class BankFrame extends javax.swing.JFrame {
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private ArrayList<User> users;
-
+    
+    private Transactions getTransactionType(String type) {
+        if ("Deposit".equals(type)) {
+            return new DepositController();
+        } else if ("Withdraw".equals(type)) {
+            return new WitdrawController();
+        } else if ("Transfer".equals(type)) {
+            return new TransferController();
+        }
+        return null;
+    }
     /**
      * Creates new form BankFrame
      */
@@ -38,6 +50,8 @@ public class BankFrame extends javax.swing.JFrame {
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.users = new ArrayList<>();
+        
+        
     }
 
     /**
@@ -569,7 +583,7 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
         // TODO add your handling code here:
-        
+
         String userId = jTextField5.getText();
         String initialBalance = jTextField6.getText();
 
@@ -593,13 +607,17 @@ public class BankFrame extends javax.swing.JFrame {
             String sourceAccountId = jTextFieldSourceAccount.getText();
             String destinationAccountId = jTextFieldDestinationAccount.getText();
             String amount = jTextFieldAmount.getText();
+
+            EventHandler handler = new EventHandler(destinationAccountId, sourceAccountId, amount);
+
+            String type = (String) jComboBox1.getSelectedItem();
+            Transactions transaction = getTransactionType(type);
             
-           EventHandler handler = new EventHandler(destinationAccountId, sourceAccountId,amount);
-   
-            String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+            handler.MakeTransaction(transaction);
+            
             switch (type) {
                 case "Deposit": {
-                   Response response = Transactions.makeTrasaction(destinationAccountId,null, amount);
+                    Response response = Transactions.makeTrasaction(destinationAccountId, null, amount);
 
                     if (response.getStatus() >= 500) {
                         JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -614,7 +632,7 @@ public class BankFrame extends javax.swing.JFrame {
                     break;
                 }
                 case "Withdraw": {
-                   Response response = WitdrawController.makeTrasaction(sourceAccountId, amount);
+                    Response response = WitdrawController.makeTrasaction(sourceAccountId, amount);
 
                     if (response.getStatus() >= 500) {
                         JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
