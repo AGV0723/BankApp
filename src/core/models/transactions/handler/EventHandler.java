@@ -5,9 +5,9 @@
 package core.models.transactions.handler;
 
 import core.controllers.transactions.Transactions;
+import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.storage.AccountStorage;
-import core.models.transactions.Transaction;
 
 /**
  *
@@ -65,8 +65,7 @@ public class EventHandler {
     
     double amountDouble = getAmount();
     
-    
-
+    destinationAccount.setBalance(transactions.execute(DestinationAccountId, SourceAccountId, Amount));
     }
 
 }

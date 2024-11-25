@@ -11,16 +11,16 @@ import core.models.storage.AccountStorage;
 import core.models.storage.TransactionStorage;
 import core.models.transactions.Transaction;
 import core.models.transactions.type.TransactionType;
+
 /**
  *
  * @author adrianonzalezrubiovilla
  */
-public class DepositController implements Transactions{
+public class DepositController  {
 
-    @Override
-    public Response execute(String destinationAccountId, String sourceAccountId, String amount) {
+    public static Response makeTrasaction(String destinationAccountId, String amount) {
         try {
-            int destinationAccountIdInt; 
+            int destinationAccountIdInt;
             double amountDouble;
 
             try {
@@ -50,18 +50,20 @@ public class DepositController implements Transactions{
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
 
-            Transaction depositTransaction = new Transaction(TransactionType.DEPOSIT,null, destinationAccount,amountDouble);
-            
+            Transaction depositTransaction = new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amountDouble);
+
             // Registrar la transacción en el TransactionStorage
             transactionStorage.addTransaction(depositTransaction);
-            
+
             // Actualizar el saldo de la cuenta destino
             destinationAccount.setBalance(destinationAccount.getBalance() + amountDouble);
-            
+
             return new Response("Deposit registered successfully", Status.CREATED);
 
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
-        }
-}
+    }
+        
+    }
+

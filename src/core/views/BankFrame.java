@@ -9,7 +9,6 @@ import core.controllers.ListAccountController;
 import core.controllers.ListUserController;
 import core.controllers.UserController;
 import core.controllers.transactions.DepositController;
-import core.controllers.transactions.Transactions;
 import core.controllers.transactions.TransferController;
 import core.controllers.transactions.WitdrawController;
 import core.controllers.utils.Response;
@@ -31,17 +30,7 @@ public class BankFrame extends javax.swing.JFrame {
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private ArrayList<User> users;
-    
-    private Transactions getTransactionType(String type) {
-        if ("Deposit".equals(type)) {
-            return new DepositController();
-        } else if ("Withdraw".equals(type)) {
-            return new WitdrawController();
-        } else if ("Transfer".equals(type)) {
-            return new TransferController();
-        }
-        return null;
-    }
+   
     /**
      * Creates new form BankFrame
      */
@@ -603,21 +592,14 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void MakeTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MakeTransactionButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            String sourceAccountId = jTextFieldSourceAccount.getText();
-            String destinationAccountId = jTextFieldDestinationAccount.getText();
-            String amount = jTextFieldAmount.getText();
-
-            EventHandler handler = new EventHandler(destinationAccountId, sourceAccountId, amount);
-
-            String type = (String) jComboBox1.getSelectedItem();
-            Transactions transaction = getTransactionType(type);
-            
-            handler.MakeTransaction(transaction);
-            
+         try {
+            String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
             switch (type) {
                 case "Deposit": {
-                    Response response = Transactions.makeTrasaction(destinationAccountId, null, amount);
+                    String destinationAccountId = jTextFieldDestinationAccount.getText();
+                    String amount = jTextFieldAmount.getText();
+
+                    Response response = DepositController.makeTrasaction(destinationAccountId, amount);
 
                     if (response.getStatus() >= 500) {
                         JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
@@ -632,6 +614,9 @@ public class BankFrame extends javax.swing.JFrame {
                     break;
                 }
                 case "Withdraw": {
+                    String sourceAccountId = jTextFieldSourceAccount.getText();
+                    String amount = jTextFieldAmount.getText();
+
                     Response response = WitdrawController.makeTrasaction(sourceAccountId, amount);
 
                     if (response.getStatus() >= 500) {
@@ -647,6 +632,9 @@ public class BankFrame extends javax.swing.JFrame {
                     break;
                 }
                 case "Transfer": {
+                    String sourceAccountId = jTextFieldSourceAccount.getText();
+                    String destinationAccountId = jTextFieldDestinationAccount.getText();
+                    String amount = jTextFieldAmount.getText();
 
                     Response response = TransferController.makeTrasaction(destinationAccountId, sourceAccountId, amount);
 
@@ -671,8 +659,9 @@ public class BankFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception ex) { {
             JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         }
     }//GEN-LAST:event_MakeTransactionButtonActionPerformed
 

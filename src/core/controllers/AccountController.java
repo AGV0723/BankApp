@@ -21,6 +21,7 @@ public class AccountController {
             
             try {
                 idInt = Integer.parseInt(id);
+                System.out.println(idInt);
                 if (idInt < 0) {
                     return new Response("Id must be positive", Status.BAD_REQUEST);
                 }

@@ -16,10 +16,9 @@ import core.models.transactions.type.TransactionType;
  *
  * @author adrianonzalezrubiovilla
  */
-public class WitdrawController implements Transactions {
+public class WitdrawController{
 
-    @Override
-    public Response execute(String destinationAccountId, String sourceAccountId, String amount) {
+    public static Response makeTrasaction(String destinationAccountId, String amount) {
         try {
 
             if (destinationAccountId == null || destinationAccountId.trim().isEmpty()) {
