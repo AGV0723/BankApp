@@ -16,24 +16,22 @@ import core.models.transactions.type.TransactionType;
  *
  * @author adrianonzalezrubiovilla
  */
-public class DepositController  {
+public class DepositController {
 
     public static Response makeTrasaction(String destinationAccountId, String amount) {
         try {
-            int destinationAccountIdInt;
             double amountDouble;
 
-            try {
-                destinationAccountIdInt = Integer.parseInt(destinationAccountId.trim());
-                if (destinationAccountIdInt < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            // Validación del formato de ID
+            destinationAccountId = destinationAccountId.trim();
+            if (!destinationAccountId.matches("\\d{3}-\\d{6}-\\d{2}")) {
+                return new Response("Id must follow the format XXX-XXXXXX-XX", Status.BAD_REQUEST);
             }
 
+            // Validación del monto
+            amount = amount.trim();
             try {
-                amountDouble = Double.parseDouble(amount.trim());
+                amountDouble = Double.parseDouble(amount);
                 if (amountDouble < 0) {
                     return new Response("Amount must be positive", Status.BAD_REQUEST);
                 }
@@ -41,21 +39,19 @@ public class DepositController  {
                 return new Response("Amount must be numeric", Status.BAD_REQUEST);
             }
 
+            // Acceso a datos
             AccountStorage accountStorage = AccountStorage.getInstance();
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
 
             // Verificar si la cuenta destino existe
-            Account destinationAccount = accountStorage.getAccount(destinationAccountIdInt);
+            Account destinationAccount = accountStorage.getAccount(destinationAccountId);
             if (destinationAccount == null) {
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
 
+            // Realizar la transacción
             Transaction depositTransaction = new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amountDouble);
-
-            // Registrar la transacción en el TransactionStorage
             transactionStorage.addTransaction(depositTransaction);
-
-            // Actualizar el saldo de la cuenta destino
             destinationAccount.setBalance(destinationAccount.getBalance() + amountDouble);
 
             return new Response("Deposit registered successfully", Status.CREATED);
@@ -64,6 +60,4 @@ public class DepositController  {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
-        
-    }
-
+}

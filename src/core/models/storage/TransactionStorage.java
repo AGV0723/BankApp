@@ -4,13 +4,10 @@
  */
 package core.models.storage;
 
-import core.models.Account;
-import core.models.User;
-import core.models.transactions.Transaction;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import core.models.transactions.Transaction;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -45,9 +42,11 @@ public class TransactionStorage {
     }
 
     public void printTransactions(DefaultTableModel model) {
-        for (Transaction transaction : this.transactions) {
-            model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
+        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
+        Collections.reverse(transactionsCopy);
+ 
+        for (Transaction transaction : transactionsCopy) {
+            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
     }
-
 }

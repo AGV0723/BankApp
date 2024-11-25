@@ -16,11 +16,11 @@ import core.models.transactions.type.TransactionType;
  *
  * @author adrianonzalezrubiovilla
  */
-public class WitdrawController{
+public class WitdrawController {
 
     public static Response makeTrasaction(String destinationAccountId, String amount) {
         try {
-
+            // Validar si los campos están vacíos
             if (destinationAccountId == null || destinationAccountId.trim().isEmpty()) {
                 return new Response("Destination account field cannot be empty", Status.BAD_REQUEST);
             }
@@ -28,18 +28,15 @@ public class WitdrawController{
                 return new Response("Amount field cannot be empty", Status.BAD_REQUEST);
             }
 
-            int destinationAccountIdInt;
             double amountDouble;
 
-            try {
-                destinationAccountIdInt = Integer.parseInt(destinationAccountId.trim());
-                if (destinationAccountIdInt < 0) {
-                    return new Response("Id must be positive", Status.BAD_REQUEST);
-                }
-            } catch (NumberFormatException ex) {
-                return new Response("Id must be numeric", Status.BAD_REQUEST);
+            // Validación del formato de la cuenta
+            destinationAccountId = destinationAccountId.trim();
+            if (!destinationAccountId.matches("\\d{3}-\\d{6}-\\d{2}")) {
+                return new Response("Destination account Id must follow the format XXX-XXXXXX-XX", Status.BAD_REQUEST);
             }
 
+            // Validación del monto
             try {
                 amountDouble = Double.parseDouble(amount.trim());
                 if (amountDouble < 0) {
@@ -53,19 +50,21 @@ public class WitdrawController{
             TransactionStorage transactionStorage = TransactionStorage.getInstance();
 
             // Verificar si la cuenta destino existe
-            Account destinationAccount = accountStorage.getAccount(destinationAccountIdInt);
+            Account destinationAccount = accountStorage.getAccount(destinationAccountId);
             if (destinationAccount == null) {
                 return new Response("Destination account not found", Status.BAD_REQUEST);
             }
 
+            // Verificar si hay fondos suficientes
             if (destinationAccount.getBalance() < amountDouble) {
                 return new Response("Insufficient funds", Status.BAD_REQUEST);
             }
 
-            Transaction depositTransaction = new Transaction(TransactionType.WITHDRAW, null, destinationAccount, amountDouble);
+            // Crear transacción de retiro
+            Transaction withdrawTransaction = new Transaction(TransactionType.WITHDRAW, null, destinationAccount, amountDouble);
 
             // Registrar la transacción en el TransactionStorage
-            transactionStorage.addTransaction(depositTransaction);
+            transactionStorage.addTransaction(withdrawTransaction);
 
             // Actualizar el saldo de la cuenta destino
             destinationAccount.setBalance(destinationAccount.getBalance() - amountDouble);

@@ -38,9 +38,9 @@ public class AccountStorage {
         return true;
     }
     
-    public Account getAccount(int id) {
+    public Account getAccount(String id) {
         for (Account account : this.accounts) {
-            if (Integer.parseInt(account.getId()) == id) {
+            if (account.getId().equals(id)) {
                 return account;
             }
         }

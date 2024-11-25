@@ -6,6 +6,7 @@ package core.views;
 
 import core.controllers.AccountController;
 import core.controllers.ListAccountController;
+import core.controllers.ListTransactionController;
 import core.controllers.ListUserController;
 import core.controllers.UserController;
 import core.controllers.transactions.DepositController;
@@ -15,9 +16,7 @@ import core.controllers.utils.Response;
 import core.models.Account;
 import core.models.User;
 import core.models.transactions.Transaction;
-import core.models.transactions.handler.EventHandler;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,7 +29,7 @@ public class BankFrame extends javax.swing.JFrame {
     private ArrayList<Account> accounts;
     private ArrayList<Transaction> transactions;
     private ArrayList<User> users;
-   
+
     /**
      * Creates new form BankFrame
      */
@@ -39,8 +38,7 @@ public class BankFrame extends javax.swing.JFrame {
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.users = new ArrayList<>();
-        
-        
+
     }
 
     /**
@@ -592,7 +590,7 @@ public class BankFrame extends javax.swing.JFrame {
 
     private void MakeTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MakeTransactionButtonActionPerformed
         // TODO add your handling code here:
-         try {
+        try {
             String type = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
             switch (type) {
                 case "Deposit": {
@@ -659,9 +657,10 @@ public class BankFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (Exception ex) { {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        } catch (Exception ex) {
+            {
+                JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_MakeTransactionButtonActionPerformed
 
@@ -702,15 +701,18 @@ public class BankFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_RefreshAccountsButtonActionPerformed
 
     private void RefreshTransactionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefreshTransactionsButtonActionPerformed
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
         model.setRowCount(0);
 
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
-        Collections.reverse(transactionsCopy);
+        Response response = ListTransactionController.showAccountList(model);
 
-        for (Transaction transaction : transactionsCopy) {
-            model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+
         }
     }//GEN-LAST:event_RefreshTransactionsButtonActionPerformed
 
