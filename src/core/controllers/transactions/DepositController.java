@@ -18,7 +18,7 @@ import core.models.transactions.type.TransactionType;
 public class DepositController implements Transactions{
 
     @Override
-    public Response makeTrasaction(String destinationAccountId, String sourceAccountId, String amount) {
+    public Response execute(String destinationAccountId, String sourceAccountId, String amount) {
         try {
             int destinationAccountIdInt; 
             double amountDouble;
@@ -63,5 +63,5 @@ public class DepositController implements Transactions{
         } catch (Exception ex) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
-    }
+        }
 }

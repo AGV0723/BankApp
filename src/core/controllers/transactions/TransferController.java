@@ -18,7 +18,7 @@ import core.models.transactions.type.TransactionType;
 public class TransferController implements Transactions{   
 
     @Override
-    public Response makeTrasaction(String destinationAccountId, String sourceAccountId, String amount) {
+    public Response execute(String destinationAccountId, String sourceAccountId, String amount) {
         try {
             
             if (destinationAccountId == null || destinationAccountId.trim().isEmpty()) {
