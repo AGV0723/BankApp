@@ -3,13 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package core.models.storage;
+
 import core.models.Account;
 import core.models.User;
 import core.models.transactions.Transaction;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import core.models.transactions.Transaction;
-import java.util.ArrayList; 
+import java.util.ArrayList;
+
 /**
  *
  * @author Usuario
@@ -43,12 +45,9 @@ public class TransactionStorage {
     }
 
     public void printTransactions(DefaultTableModel model) {
-        if (this.transactions.isEmpty()) {
-            System.out.println("No hay usuarios en la lista.");
-            return;
+        for (Transaction transaction : this.transactions) {
+            model.addRow(new Object[]{transaction.getType(), transaction.getSourceAccount(), transaction.getDestinationAccount(), transaction.getAmount()});
         }
-        
-        
-
     }
+
 }
